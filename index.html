@@ -20,11 +20,13 @@
           <button id="refresh-button" type="button">↻ 새로고침</button>
         </div>
       </header>
+
       <section class="rate-card" aria-live="polite">
         <div class="rate-heading"><span>미국 달러 · 원화</span><span id="status">불러오는 중</span></div>
         <div class="rate-value"><strong id="rate">—</strong><span>원 / USD</span></div>
         <p id="rate-date">환율 정보를 불러오고 있습니다.</p>
       </section>
+
       <section class="grid">
         <article class="panel decision-panel">
           <div class="panel-heading">
@@ -35,30 +37,55 @@
           <div class="comparison"><span>기준 환율</span><strong id="reference-display">—</strong></div>
           <div class="comparison"><span>기준 대비</span><strong id="difference-display">—</strong></div>
         </article>
+
         <form class="panel settings" id="settings-form">
-          <p class="label">나의 기준 설정</p><h2>매수 판단 기준</h2>
-          <label>관심 매수 환율 <span>(원 / USD)</span><input id="target-rate" type="number" min="1" step="1" value="1350" inputmode="numeric" /></label>
-          <label>분할매수 여유폭 <span>(원)</span><input id="buffer" type="number" min="0" step="1" value="20" inputmode="numeric" /></label>
-          <button type="submit">기준 적용</button><p class="hint">설정값은 이 기기에 저장됩니다.</p>
+          <p class="label">나의 기준 설정</p>
+          <h2>매수 판단 기준</h2>
+          <label>관심 매수 환율 <span>(원 / USD)</span>
+            <input id="target-rate" type="number" min="1" step="1" value="1350" inputmode="numeric" />
+          </label>
+          <label>분할매수 여유폭 <span>(원)</span>
+            <input id="buffer" type="number" min="0" step="1" value="20" inputmode="numeric" />
+          </label>
+          <button type="submit">기준 적용</button>
+          <p class="hint">설정값은 이 기기에 저장됩니다.</p>
         </form>
       </section>
+
       <section class="portfolio-section">
-        <div class="section-title"><div><p class="eyebrow">MY RECORDS</p><h2>매수 · 매도 기록</h2></div><button id="clear-records" class="text-button" type="button">기록 전체 삭제</button></div>
+        <div class="section-title"><div><p class="eyebrow">MY RECORDS</p><h2>매수 · 매도 기록</h2></div><div class="record-actions"><label class="upload-button" for="import-file">엑셀 · CSV 불러오기</label><input id="import-file" type="file" accept=".csv,.xlsx,.xls" hidden /><button id="clear-records" class="text-button" type="button">기록 전체 삭제</button></div></div>
+        <p class="import-hint">열 이름은 <strong>구분, 거래일, 달러 금액, 적용 환율</strong>을 사용하세요. 구분에는 매수 또는 매도를 입력합니다.</p>
         <div class="portfolio-stats" aria-live="polite">
-          <div><span>보유 달러</span><strong id="holding-usd">$0.00</strong></div><div><span>평균 매수 환율</span><strong id="average-rate">—</strong></div><div><span>현재 평가액</span><strong id="market-value">—</strong></div><div><span>평가 손익</span><strong id="unrealized-pnl">—</strong></div>
+          <div><span>보유 달러</span><strong id="holding-usd">$0.00</strong></div>
+          <div><span>평균 매수 환율</span><strong id="average-rate">—</strong></div>
+          <div><span>현재 평가액</span><strong id="market-value">—</strong></div>
+          <div><span>평가 손익</span><strong id="unrealized-pnl">—</strong></div>
         </div>
         <div class="record-grid">
           <form class="panel record-form" id="record-form">
-            <p class="label">거래 추가</p><div class="two-columns"><label>구분<select id="transaction-type"><option value="buy">매수</option><option value="sell">매도</option></select></label><label>거래일<input id="transaction-date" type="date" required /></label></div>
-            <div class="two-columns"><label>달러 금액<input id="transaction-usd" type="number" min="0.01" step="0.01" placeholder="예: 500" required /></label><label>적용 환율 (원)<input id="transaction-rate" type="number" min="1" step="0.01" placeholder="예: 1350" required /></label></div>
+            <p class="label">거래 추가</p>
+            <div class="two-columns">
+              <label>구분<select id="transaction-type"><option value="buy">매수</option><option value="sell">매도</option></select></label>
+              <label>거래일<input id="transaction-date" type="date" required /></label>
+            </div>
+            <div class="two-columns">
+              <label>달러 금액<input id="transaction-usd" type="number" min="0.01" step="0.01" placeholder="예: 500" required /></label>
+              <label>적용 환율 (원)<input id="transaction-rate" type="number" min="1" step="0.01" placeholder="예: 1350" required /></label>
+            </div>
             <button type="submit">기록 저장</button>
           </form>
           <div class="panel transaction-list"><p class="label">거래 내역</p><div id="transactions" class="transactions"><p class="empty-state">아직 기록한 거래가 없습니다.</p></div></div>
         </div>
       </section>
-      <aside class="notice"><strong>알아두세요</strong><p>표시값은 기준환율이며, 실제 환전·송금 환율은 은행·증권사 수수료와 스프레드에 따라 다를 수 있습니다. 이 페이지는 정보 확인용이며 투자 조언이 아닙니다.</p></aside>
+
+      <aside class="notice">
+        <strong>알아두세요</strong>
+        <p>표시값은 기준환율이며, 실제 환전·송금 환율은 은행·증권사 수수료와 스프레드에 따라 다를 수 있습니다. 이 페이지는 정보 확인용이며 투자 조언이 아닙니다.</p>
+      </aside>
       <footer>환율 데이터: Frankfurter · 기준환율은 평일 기준으로 갱신될 수 있습니다.</footer>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
+
