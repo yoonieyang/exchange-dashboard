@@ -5,17 +5,6 @@ const currentRate = c => c === "JPY" ? rates.JPY * 100 : rates.USD;
 const unit = c => c === "JPY" ? "100 JPY" : "1 USD";
 
 function save() { localStorage.setItem("transactions", JSON.stringify(transactions)); }
-function updateDecision() {
-  if (!rates.USD) return;
-  const target = Number(document.querySelector("#target-rate").value), buffer = Number(document.querySelector("#buffer").value);
-  const difference = rates.USD - target, title = document.querySelector("#decision-title"), text = document.querySelector("#decision-text"), badge = document.querySelector("#decision-badge");
-  document.querySelector("#reference-display").textContent = won(target);
-  document.querySelector("#difference-display").textContent = `${difference >= 0 ? "+" : ""}${won(difference)}`;
-  badge.className = "badge";
-  if (rates.USD <= target) { title.textContent = "USD 매수 기준 도달"; text.textContent = "현재 USD 환율이 설정한 관심 매수 환율 이하입니다."; badge.textContent = "매수 구간"; badge.classList.add("buy"); }
-  else if (rates.USD <= target + buffer) { title.textContent = "USD 분할매수 검토"; text.textContent = "관심 매수 환율의 여유폭 안입니다."; badge.textContent = "검토"; badge.classList.add("buy"); }
-  else { title.textContent = "USD 관망 구간"; text.textContent = "현재 USD 환율이 매수 기준보다 높습니다."; badge.textContent = "대기"; badge.classList.add("wait"); }
-}
 function signal(item) {
   if (item.type === "sell") return ["매도 완료", "기록된 매도 건", ""];
   const now = currentRate(item.currency);
@@ -43,7 +32,7 @@ async function fetchRate(currency) {
   document.querySelector(`#${id}-status`).textContent = "최신 조회 완료";
 }
 async function fetchRates() {
-  try { await Promise.all(["USD","JPY"].map(fetchRate)); updateDecision(); renderTransactions(); }
+  try { await Promise.all(["USD","JPY"].map(fetchRate)); renderTransactions(); }
   catch { ["usd","jpy"].forEach(id => document.querySelector(`#${id}-status`).textContent = "연결 확인 필요"); }
 }
 function importedRecord(row) {
@@ -60,13 +49,10 @@ async function importFile(file) {
   transactions.push(...records); save(); renderTransactions(); alert(`${records.length}건을 불러왔습니다.`);
 }
 document.querySelector("#refresh-button").addEventListener("click", fetchRates);
-document.querySelector("#settings-form").addEventListener("submit", e => { e.preventDefault(); localStorage.setItem("targetRate",document.querySelector("#target-rate").value); localStorage.setItem("buffer",document.querySelector("#buffer").value); updateDecision(); });
 document.querySelector("#record-form").addEventListener("submit", e => { e.preventDefault(); const currency=document.querySelector("#transaction-currency").value, amount=Number(document.querySelector("#transaction-usd").value), rate=Number(document.querySelector("#transaction-rate").value); if(!amount||!rate)return; transactions.push({id:crypto.randomUUID(),type:document.querySelector("#transaction-type").value,currency,date:document.querySelector("#transaction-date").value,usd:amount,rate}); save(); e.currentTarget.reset(); document.querySelector("#transaction-date").value=new Date().toISOString().slice(0,10); renderTransactions(); });
 document.querySelector("#import-file").addEventListener("change", async e => { if(e.target.files[0]) await importFile(e.target.files[0]); e.target.value=""; });
 document.querySelector("#transactions").addEventListener("click", e => { if(e.target.matches(".delete-one")) { transactions=transactions.filter(x=>x.id!==e.target.dataset.id); save(); renderTransactions(); } });
 document.querySelector("#clear-records").addEventListener("click", () => { if(transactions.length && confirm("저장된 거래 기록을 모두 삭제할까요?")) { transactions=[]; save(); renderTransactions(); } });
-document.querySelector("#target-rate").value=localStorage.getItem("targetRate") || "1350";
-document.querySelector("#buffer").value=localStorage.getItem("buffer") || "20";
 document.querySelector("#transaction-date").value=new Date().toISOString().slice(0,10);
 renderTransactions(); fetchRates();
 
