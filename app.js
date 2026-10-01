@@ -15,11 +15,25 @@ function signal(item) {
   return ["보유", `목표 ${won(item.rate * 1.05)} · 손절 ${won(item.rate * .95)}`, ""];
 }
 function renderTransactions() {
+  const summary = { USD: { amount: 0, cost: 0 }, JPY: { amount: 0, cost: 0 } };
+  [...transactions].sort((a,b) => a.date.localeCompare(b.date)).forEach(item => {
+    const book = summary[item.currency], total = item.currency === "JPY" ? item.usd / 100 * item.rate : item.usd * item.rate;
+    if (item.type === "buy") { book.amount += item.usd; book.cost += total; }
+    else if (book.amount) { const average = book.cost / book.amount; book.amount -= item.usd; book.cost -= item.usd * average; }
+  });
+  const totalCost = summary.USD.cost + summary.JPY.cost;
+  const totalValue = Object.entries(summary).reduce((sum,[currency,book]) => sum + (currentRate(currency) ? book.amount / (currency === "JPY" ? 100 : 1) * currentRate(currency) : 0), 0);
+  document.querySelector("#holding-usd").textContent = `$${summary.USD.amount.toLocaleString("en-US",{maximumFractionDigits:2})}`;
+  document.querySelector("#holding-jpy").textContent = `¥${summary.JPY.amount.toLocaleString("ja-JP",{maximumFractionDigits:0})}`;
+  document.querySelector("#market-value").textContent = rates.USD && rates.JPY ? won(totalValue) : "계산 중";
+  const pnl = totalValue - totalCost, pnlElement = document.querySelector("#unrealized-pnl");
+  pnlElement.textContent = rates.USD && rates.JPY ? `${pnl >= 0 ? "+" : ""}${won(pnl)}` : "계산 중";
+  pnlElement.style.color = pnl > 0 ? "#00754a" : pnl < 0 ? "#b64e14" : "";
   const list = document.querySelector("#transactions");
   if (!transactions.length) { list.innerHTML = '<p class="empty-state">아직 기록한 거래가 없습니다.</p>'; return; }
   list.innerHTML = [...transactions].sort((a,b) => b.date.localeCompare(a.date)).map(item => {
     const [label, detail, cls] = signal(item), amount = item.currency === "USD" ? "$" : "¥";
-    return `<div class="transaction"><span class="transaction-type">${item.type === "buy" ? "매수" : "매도"}<small>${item.currency}</small></span><span><strong>${amount}${item.usd.toLocaleString("en-US",{maximumFractionDigits:2})}</strong><small>${item.date} · ${won(item.rate)} / ${unit(item.currency)} · <b class="${cls}">${label}</b> ${detail}</small></span><button class="delete-one" data-id="${item.id}" type="button">삭제</button></div>`;
+    return `<div class="transaction"><span class="transaction-type">${item.type === "buy" ? "매수" : "매도"}<small>${item.currency}</small></span><span><strong>${amount}${item.usd.toLocaleString("en-US",{maximumFractionDigits:2})}</strong><small>${item.date} · ${won(item.rate)} / ${unit(item.currency)}</small><b class="trade-status ${cls}">${label}</b><small>${detail}</small></span><button class="delete-one" data-id="${item.id}" type="button">삭제</button></div>`;
   }).join("");
 }
 async function fetchRate(currency) {
