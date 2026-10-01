@@ -26,31 +26,6 @@
         <div class="rate-card yen-card"><div class="rate-heading"><span>일본 엔 · 원화</span><span id="jpy-status">불러오는 중</span></div><div class="rate-value"><strong id="jpy-rate">—</strong><span>원 / 100 JPY</span></div><p id="jpy-rate-date">환율 정보를 불러오고 있습니다.</p></div>
       </section>
 
-      <section class="grid">
-        <article class="panel decision-panel">
-          <div class="panel-heading">
-            <div><p class="label">나의 기준에 따른 상태</p><h2 id="decision-title">계산 중</h2></div>
-            <span id="decision-badge" class="badge neutral">—</span>
-          </div>
-          <p id="decision-text" class="decision-text">설정한 매수 기준과 현재 환율을 비교합니다.</p>
-          <div class="comparison"><span>기준 환율</span><strong id="reference-display">—</strong></div>
-          <div class="comparison"><span>기준 대비</span><strong id="difference-display">—</strong></div>
-        </article>
-
-        <form class="panel settings" id="settings-form">
-          <p class="label">나의 기준 설정</p>
-          <h2>매수 판단 기준</h2>
-          <label>관심 매수 환율 <span>(원 / USD)</span>
-            <input id="target-rate" type="number" min="1" step="1" value="1350" inputmode="numeric" />
-          </label>
-          <label>분할매수 여유폭 <span>(원)</span>
-            <input id="buffer" type="number" min="0" step="1" value="20" inputmode="numeric" />
-          </label>
-          <button type="submit">기준 적용</button>
-          <p class="hint">설정값은 이 기기에 저장됩니다.</p>
-        </form>
-      </section>
-
       <section class="portfolio-section">
         <div class="section-title"><div><p class="eyebrow">MY RECORDS</p><h2>매수 · 매도 기록</h2></div><div class="record-actions"><label class="upload-button" for="import-file">엑셀 · CSV 불러오기</label><input id="import-file" type="file" accept=".csv,.xlsx,.xls" hidden /><button id="clear-records" class="text-button" type="button">기록 전체 삭제</button></div></div>
         <p class="import-hint">CSV 열 이름: <strong>purchase_date, currency, quantity, rate_basis, purchase_rate_krw, invested_krw</strong></p>
