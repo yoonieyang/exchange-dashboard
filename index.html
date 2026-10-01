@@ -21,10 +21,9 @@
         </div>
       </header>
 
-      <section class="rate-card" aria-live="polite">
-        <div class="rate-heading"><span>미국 달러 · 원화</span><span id="status">불러오는 중</span></div>
-        <div class="rate-value"><strong id="rate">—</strong><span>원 / USD</span></div>
-        <p id="rate-date">환율 정보를 불러오고 있습니다.</p>
+      <section class="rate-cards" aria-live="polite">
+        <div class="rate-card"><div class="rate-heading"><span>미국 달러 · 원화</span><span id="usd-status">불러오는 중</span></div><div class="rate-value"><strong id="usd-rate">—</strong><span>원 / USD</span></div><p id="usd-rate-date">환율 정보를 불러오고 있습니다.</p></div>
+        <div class="rate-card yen-card"><div class="rate-heading"><span>일본 엔 · 원화</span><span id="jpy-status">불러오는 중</span></div><div class="rate-value"><strong id="jpy-rate">—</strong><span>원 / 100 JPY</span></div><p id="jpy-rate-date">환율 정보를 불러오고 있습니다.</p></div>
       </section>
 
       <section class="grid">
@@ -54,7 +53,7 @@
 
       <section class="portfolio-section">
         <div class="section-title"><div><p class="eyebrow">MY RECORDS</p><h2>매수 · 매도 기록</h2></div><div class="record-actions"><label class="upload-button" for="import-file">엑셀 · CSV 불러오기</label><input id="import-file" type="file" accept=".csv,.xlsx,.xls" hidden /><button id="clear-records" class="text-button" type="button">기록 전체 삭제</button></div></div>
-        <p class="import-hint">열 이름은 <strong>구분, 거래일, 달러 금액, 적용 환율</strong>을 사용하세요. 구분에는 매수 또는 매도를 입력합니다.</p>
+        <p class="import-hint">CSV 열 이름: <strong>purchase_date, currency, quantity, rate_basis, purchase_rate_krw, invested_krw</strong></p>
         <div class="portfolio-stats" aria-live="polite">
           <div><span>보유 달러</span><strong id="holding-usd">$0.00</strong></div>
           <div><span>평균 매수 환율</span><strong id="average-rate">—</strong></div>
@@ -66,10 +65,11 @@
             <p class="label">거래 추가</p>
             <div class="two-columns">
               <label>구분<select id="transaction-type"><option value="buy">매수</option><option value="sell">매도</option></select></label>
+              <label>통화<select id="transaction-currency"><option value="USD">USD · 달러</option><option value="JPY">JPY · 엔화</option></select></label>
               <label>거래일<input id="transaction-date" type="date" required /></label>
             </div>
             <div class="two-columns">
-              <label>달러 금액<input id="transaction-usd" type="number" min="0.01" step="0.01" placeholder="예: 500" required /></label>
+              <label>통화 금액<input id="transaction-usd" type="number" min="0.01" step="0.01" placeholder="예: 500" required /></label>
               <label>적용 환율 (원)<input id="transaction-rate" type="number" min="1" step="0.01" placeholder="예: 1350" required /></label>
             </div>
             <button type="submit">기록 저장</button>
@@ -82,7 +82,7 @@
         <strong>알아두세요</strong>
         <p>표시값은 기준환율이며, 실제 환전·송금 환율은 은행·증권사 수수료와 스프레드에 따라 다를 수 있습니다. 이 페이지는 정보 확인용이며 투자 조언이 아닙니다.</p>
       </aside>
-      <footer>환율 데이터: Frankfurter · 기준환율은 평일 기준으로 갱신될 수 있습니다.</footer>
+      <footer>환율 데이터: Frankfurter · 매수 건별 ±5% 기준으로 상태를 표시합니다.</footer>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="app.js"></script>
